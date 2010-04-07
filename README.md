@@ -1,4 +1,3 @@
-=======================================
 Extended Kohana 3 Database Library (0.1)
 =======================================
 
@@ -31,7 +30,7 @@ Mandatory Feature
 
 Only one feature may affect existing projects. The default database must be loaded and instantiated in the Database class before calling the Database_Query execute() method without a database parameter defined. See Database::default_instance(). This prevents Kohana from instantiating the default database using the default config group implicitly. This is to avoid potentially using an unexpected default database when multiple environments are used.
 
-=====
+
 Usage
 =====
 
@@ -41,9 +40,11 @@ Query class
 -----------
 
 Since the Query class extends DB, its usage is the same:
+
 - Query::select()->from('my_table')->execute();
 
 Query has one new method called sql(). It is functionally identical to DB::query($type, $sql):
+
 - Query::sql($sql)->execute();
 - Query::sql($sql)->param(':my_param',$my_param)->execute();
 
@@ -57,47 +58,54 @@ The integer $lifetime param is to set the $lifetime, or use the default if null,
 The string $type method is to set the cache driver to something other than the default when using the cache module.
 
 Example:
+
 - Query::sql($sql)->cache()->execute();
 - Query::select()->from('my_table')->cache(true,3600)->execute();
 - DB::select()->from('my_table')->cache()->execute();
 
 Simplified usage for both the Kohana internal cache and the cache module:
-- cache(); - Get/set.
-- cache(true, 60); - Get/set.
-- cache(true, 0); - Delete.
-- cache(false); - Refresh.
-- cache(false, 60); - Refresh.
-- cache(false, 0); - Delete.
+
+- cache(); Get/set.
+- cache(true, 60); Get/set.
+- cache(true, 0); Delete.
+- cache(false); Refresh.
+- cache(false, 60); Refresh.
+- cache(false, 0); Delete.
 
 Specific usage for cache module:
-- cache(); - Get or set cache. Get cache. If empty, set cache using default lifetime.
-- cache(true, 60); - Get or set cache. Same as above cache() but using specified lifetime.
-- cache(true, 0); - Delete cache. Check and return cache if it exists, but also delete cache for this query. If cache doesn't exist, then same effect as not using cache().
-- cache(false); - Refresh cache. Don't check cache, but cache the new results using the default lifetime.
-- cache(false, 60); - Refresh cache. Same as above cache(false) but using specified lifetime.
-- cache(false, 0); - Delete cache. Don't check cache and delete cache for this query if it was previously cached.
-- cache(true, 60, 'memcache'); - Use a specific cache driver.
+
+- cache(); Get or set cache. Get cache. If empty, set cache using default lifetime.
+- cache(true, 60); Get or set cache. Same as above cache() but using specified lifetime.
+- cache(true, 0); Delete cache. Check and return cache if it exists, but also delete cache for this query. If cache doesn't exist, then same effect as not using cache().
+- cache(false); Refresh cache. Don't check cache, but cache the new results using the default lifetime.
+- cache(false, 60); Refresh cache. Same as above cache(false) but using specified lifetime.
+- cache(false, 0); Delete cache. Don't check cache and delete cache for this query if it was previously cached.
+- cache(true, 60, 'memcache'); Use a specific cache driver.
 
 Specific usage if no cache module. Note that lifetime is meaningless when setting cache:
-- cache(); -  Get or set cache. 
+
+- cache(); Get or set cache. 
 			1) If cache exists and is younger than default lifetime, then get cache. If older than default time, delete cache.
  		    2) Else set cache. Lifetime not used when setting.
-- cache(true, 60); - Same as above cache(), but use specified lifetime instead of default lifetime.
-- cache(true, 0); - Delete cache. Doesn't get or set cache.
-- cache(false); - Refresh cache. Don't check cache, but cache the new results ignoring lifetime.
-- cache(false, 60); - Refresh cache. Same as above cache(false) since lifetime ignored when setting.
-- cache(false, 0); - Delete cache. Same as cache(true, 0);
+- cache(true, 60); Same as above cache(), but use specified lifetime instead of default lifetime.
+- cache(true, 0); Delete cache. Doesn't get or set cache.
+- cache(false); Refresh cache. Don't check cache, but cache the new results ignoring lifetime.
+- cache(false, 60); Refresh cache. Same as above cache(false) since lifetime ignored when setting.
+- cache(false, 0); Delete cache. Same as cache(true, 0);
 
 Database::default_instance()
 ----------------------------
 
 Use this to set the default database in the bootstrap:
+
 - Database::default_instance($config_group_name_or_config_array);
 
 For example if you have Kohana::environment set to "development" and your database config group has the same name:
+
 - Database::default_instance(Kohana::$environment);
 
 Some alternatives to this method:
+
 1. Put logic in config files to dynamically set the "default" group to some other group.
 2. In bootstrap: Kohana::config('database')->default = Kohana::config('database')->$group_name;. Note that all config parameters must be defined since Kohana will not be able to merge config files.
 3. In bootstrap: Database::instance('default', Kohana::config('database')->$group_name);. This works but isn't very clear.
