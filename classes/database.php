@@ -2,13 +2,12 @@
 /**
  * Database connection wrapper. Extends Kohana_Database.
  * 
- * Modifications by Rick Jolly: 
  * - Added method default_instance($default)
  *
- * @package    Database
- * @author     Kohana Team
- * @copyright  (c) 2008-2009 Kohana Team
- * @license    http://kohanaphp.com/license
+ * @package Database
+ * @author Rick Jolly <rickjolly@hotmail.com>
+ * @copyright (c) 2010 Rick Jolly
+ * @license ISC http://www.opensource.org/licenses/isc-license.txt
  */
 abstract class Database extends Kohana_Database {
 	

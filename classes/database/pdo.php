@@ -2,8 +2,8 @@
 /**
  * PDO database connection. Extends Kohana_Database_PDO
  * 
- * Modifications by Rick Jolly: 
- * - query method ignores query $type parameter.
+ * Modifications by Rick Jolly licensed under ISC http://www.opensource.org/licenses/isc-license.txt:
+ * - query() method ignores query $type parameter.
  * - If PDO result has columns (meaning has resultset), 
  * 		a resultset is returned.
  * - Else if no resultset and insert id is not 0, then

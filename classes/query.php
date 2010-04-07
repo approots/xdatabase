@@ -2,13 +2,12 @@
 /**
  * Database query object creation helper methods. Extends Kohana_DB.
  * 
- * Modifications by Rick Jolly: 
- * - Added method sql($sql) as an alias to DB:query($any_type, $sql)
+ * Added method sql($sql) as an alias to DB:query($any_type, $sql)
  *
- * @package    Database
- * @author     Kohana Team
- * @copyright  (c) 2009 Kohana Team
- * @license    http://kohanaphp.com/license
+ * @package Database
+ * @author Rick Jolly <rickjolly@hotmail.com>
+ * @copyright (c) 2010 Rick Jolly
+ * @license ISC http://www.opensource.org/licenses/isc-license.txt
  */
 class Query extends Kohana_DB {
 	

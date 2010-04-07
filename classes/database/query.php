@@ -2,7 +2,7 @@
 /**
  * Database query wrapper. Extends Kohana_Database_Query
  *
- * Modifications by Rick Jolly: 
+ * Modifications by Rick Jolly licensed under ISC http://www.opensource.org/licenses/isc-license.txt:
  * - Pre-existing cached($lifetime = NULL) method calls new cache() method,
  * 		but its results are unchanged.
  * - New cache($check = TRUE, $specific_lifetime = NULL, $type = NULL) 

@@ -2,8 +2,8 @@
 /**
  * MySQL database connection. Extends Kohana_Database_MySQL.
  * 
- * Modifications by Rick Jolly: 
- * - query method ignores query $type parameter.
+ * Modifications by Rick Jolly licensed under ISC http://www.opensource.org/licenses/isc-license.txt: 
+ * - query() method ignores query $type parameter.
  * - If mysql result is not boolean, a resultset returned.
  * - Else if boolean and mysql_insert_id() is not 0, then
  * 		array(insert id, rows affected) returned.
