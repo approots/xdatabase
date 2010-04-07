@@ -1,6 +1,13 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 /**
- * MySQL database connection.
+ * MySQL database connection. Extends Kohana_Database_MySQL.
+ * 
+ * Modifications by Rick Jolly: 
+ * - query method ignores query $type parameter.
+ * - If mysql result is not boolean, a resultset returned.
+ * - Else if boolean and mysql_insert_id() is not 0, then
+ * 		array(insert id, rows affected) returned.
+ * - Else an integer rows affected is returned.
  *
  * @package    Database
  * @author     Kohana Team
@@ -14,8 +21,8 @@ class Database_MySQL extends Kohana_Database_MySQL {
 	 * and in some cases results will not correspond with $type - examples:
 	 * "select * into outfile..."
 	 * "insert into...on duplicate key update"
-	 * Also, for insert queries on tables without an autoincrement id, only rows affected 
-	 * need be returned.
+	 * Also, for insert queries on tables without an autoincrement id, there is no insert id to
+	 * return.
 	 * 
 	 * @param object $type ignored
 	 * @param object $sql
@@ -62,21 +69,10 @@ class Database_MySQL extends Kohana_Database_MySQL {
 		$this->last_query = $sql;
 
 		if (! is_bool($result))
-		// if ($type === Database::SELECT)
 		{
 			// Return an iterator of results
 			return new Database_MySQL_Result($result, $sql, $as_object);
 		}
-		/*
-		elseif ($type === Database::INSERT)
-		{
-			// Return a list of insert id and rows created
-			return array(
-				mysql_insert_id($this->_connection),
-				mysql_affected_rows($this->_connection),
-			);
-		}
-		*/
 		else
 		{
 			$insert_id = mysql_insert_id($this->_connection);

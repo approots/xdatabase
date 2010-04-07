@@ -1,6 +1,9 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 /**
- * Database query object creation helper methods.
+ * Database query object creation helper methods. Extends Kohana DB.
+ * 
+ * Modifications by Rick Jolly: 
+ * - Added method sql($sql) as an alias to DB:query(NULL, $sql)
  *
  * @package    Database
  * @author     Kohana Team

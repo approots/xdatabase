@@ -1,7 +1,22 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 /**
- * Database query wrapper.
+ * Database query wrapper. Extends Kohana_Database_Query
  *
+ * Modifications by Rick Jolly: 
+ * - Pre-existing cached($lifetime = NULL) method calls new cache() method,
+ * 		but its results are unchanged.
+ * - New cache($check = TRUE, $specific_lifetime = NULL, $type = NULL) 
+ * 		method adds new functionality and flexibility with an additional
+ * 		parameter $check. Also, the Kohana cache module will be used if
+ * 		it is available.
+ * - execute() method modifications:
+ * 		- The $db parameter now defaults to NULL instead of "default" and
+ * 			the default config group will not be loaded implicitly.
+ * 		- Query $type is no longer passed to drivers since it isn't used.
+ * 		- Caching moved to new method _execute_cache($db, $sql).
+ * - New _execute_cache($db, $sql) method allows for more caching 
+ * 		functionality and flexibility.
+ * 
  * @package    Database
  * @author     Kohana Team
  * @copyright  (c) 2008-2009 Kohana Team
@@ -9,9 +24,9 @@
  */
 class Database_Query extends Kohana_Database_Query {
 
-	public $_cache = NULL;
-	public $_cache_check = TRUE;
-	public $_cache_lifetime = NULL;
+	protected $_cache = NULL;
+	protected $_cache_check = TRUE;
+	protected $_cache_lifetime = NULL;
 	
 	/**
 	 * Enables the query to be cached for a specified amount of time.
@@ -29,7 +44,7 @@ class Database_Query extends Kohana_Database_Query {
 	 * Kohana cache doesn't support all the use cases below as expected. The default cache checks lifetime 
 	 * when getting based on the file modified time.
 	 * 
-	 * Simplified usage for both Kohana cache and cache module:
+	 * Simplified usage for both internal Kohana cache and cache module:
 	 * - cache() - Get/set.
 	 * - cache(true, 60) - Get/set.
 	 * - cache(true, 0) - Delete.
@@ -58,7 +73,7 @@ class Database_Query extends Kohana_Database_Query {
 	 * 
 	 * @param boolean $check [optional] Check cache and return cached result if available.
 	 * @param integer $specific_lifetime [optional] Set cache lifetime. If null, use default. If "0", delete.
-	 * @param string $type [optional] Cache type if using cache module. If null use default.
+	 * @param string $type [optional] Cache type name if using cache module. If null use default.
 	 * @return 
 	 */
 	public function cache($check = TRUE, $specific_lifetime = NULL, $type = NULL)
@@ -69,12 +84,12 @@ class Database_Query extends Kohana_Database_Query {
 			$modules = Kohana::modules();
 			if (isset($modules['cache']))
 			{
-				// use the "unofficial" Kohana cache module
+				// Use the "unofficial" Kohana cache module.
 				$this->_cache = Cache::instance($type);
 			}
 			else
 			{
-				// Default internal Kohana cache
+				// Default internal Kohana cache.
 				$this->_cache = true;
 			}
 		}
@@ -131,11 +146,11 @@ class Database_Query extends Kohana_Database_Query {
 		
 		if (! is_object($db))
 		{
-			// Get the database instance
+			// Get the database instance.
 			$db = Database::instance($db);
 		}
 
-		// Compile the SQL query
+		// Compile the SQL query.
 		$sql = $this->compile($db);
 
 		if (isset($this->_cache))
@@ -158,17 +173,17 @@ class Database_Query extends Kohana_Database_Query {
 			
 		if ($this->_cache_check)
 		{
-//echo('<br/>check cache');
+//echo Kohana::debug('check cache');
 			// Use the cache module.
 			if (is_object($this->_cache))
 			{
-//echo('<br/>check cache module');
+//echo Kohana::debug('check cache module');
 				if ($result = $this->_cache->get($cache_key))
 				{
-//echo('<br/>check cache module has cached result');
+//echo Kohana::debug('check cache module has cached result');
 					if ($this->_cache_lifetime === 0)
 					{
-//echo('<br/>check cache module delete cached result');
+//echo Kohana::debug('check cache module delete cached result');
 						// The Cache module will allow deletion of cache items even if they
 						// haven't yet expired. If lifetime is set to "0" then invalidate the cache.
 						$this->_cache->delete($cache_key);
@@ -179,16 +194,16 @@ class Database_Query extends Kohana_Database_Query {
 			}
 			else
 			{
-//echo('<br/>check native cache');
+//echo Kohana::debug('check native cache');
 //if ($this->_cache_lifetime === 0)
 //{
-//echo('<br/>check native cache should delete cached result if exists');
+//echo Kohana::debug('check native cache should delete cached result if exists');
 //}
 				// Use the internal Kohana cache. Cache will be deleted here if lifetime is less than 
-				// time() + cache modified time
+				// time() + cache modified time.
 				if ($result = Kohana::cache($cache_key, NULL, $this->_cache_lifetime))
 				{
-//echo('<br/>check native cache has cached result');
+//echo Kohana::debug('check native cache has cached result');
 					// Return a cached result
 					return new Database_Result_Cached($result, $sql, $this->_as_object);
 				}
@@ -200,29 +215,29 @@ class Database_Query extends Kohana_Database_Query {
 
 		if (is_object($this->_cache))
 		{
-//echo('<br/>cache module after new result');
+//echo Kohana::debug('cache module after new result');
 			// Use the cache module.
 			
 			if ($this->_cache_lifetime > 0)
 			{
-//echo('<br/>cache module set cache');
+//echo Kohana::debug('cache module set cache');
 				$this->_cache->set($cache_key, $result->as_array(), $this->_cache_lifetime);
 			}
 			else
 			{
-//echo('<br/>cache module delete cache');
+//echo Kohana::debug('cache module delete cache');
 				// Invalidate the cache in case it exists
 				$this->_cache->delete($cache_key);
 			}
 		}
 		else 
 		{
-//echo('<br/>native cache after new result');
+//echo Kohana::debug('native cache after new result');
 			// Use the default Kohana internal cache.
 			
 			if ($this->_cache_lifetime > 0)
 			{
-//echo('<br/>native cache set');
+//echo Kohana::debug('native cache set');
 				// Cache the result array using the default internal Kohana cache.
 				// Setting the cache lifetime here isn't supported. Lifetime is only
 				// checked when getting from cache against the file modified time.
@@ -231,7 +246,7 @@ class Database_Query extends Kohana_Database_Query {
 			}
 			else
 			{
-//echo('<br/>native cache delete');
+//echoKohana::debug('native cache delete');
 				// Force deletion of cache.
 				Kohana::cache($cache_key, NULL, 0);
 			}			

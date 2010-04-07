@@ -1,6 +1,14 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 /**
- * PDO database connection.
+ * PDO database connection. Extends Kohana_Database_PDO
+ * 
+ * Modifications by Rick Jolly: 
+ * - query method ignores query $type parameter.
+ * - If PDO result has columns (meaning has resultset), 
+ * 		a resultset is returned.
+ * - Else if no resultset and insert id is not 0, then
+ * 		array(insert id, rows affected) returned.
+ * - Else an integer rows affected is returned.
  *
  * @package    Database
  * @author     Kohana Team
