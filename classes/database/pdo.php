@@ -25,10 +25,10 @@ class Database_PDO extends Kohana_Database_PDO {
 	 * Also, for insert queries on tables without an autoincrement id, only rows affected 
 	 * need be returned.
 	 * 
-	 * @param object $type ignored
-	 * @param object $sql
-	 * @param object $as_object
-	 * @return 
+	 * @param string $type ignored
+	 * @param string $sql
+	 * @param boolean $as_object
+	 * @return object PDO result
 	 */
 	public function query($type, $sql, $as_object)
 	{

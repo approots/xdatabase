@@ -1,7 +1,7 @@
-Extended Kohana 3 Database library (0.1)
+Extended Kohana 3 Database Library (0.1)
 =======================================
 
-This is a small library that extends and modifies just a few of the Database module's classes/methods. Since all features (but one) are optional, the module can be dropped into existing projects using Kohana's database module.
+This is a small library that extends and modifies just a few of the Database module's classes/methods. Since all features (but one) are optional, the module can be dropped into existing projects that use Kohana's database module.
 
 Dependencies
 ------------
@@ -28,7 +28,7 @@ Optional Features
 Mandatory Feature
 -----------------
 
-Only one. The default database must be loaded and instantiated in the Database class before calling the Database_Query execute() method. See Database::default_instance(). This prevents Kohana from instantiating the default database using the default config group implicitly. This is to avoid potentially using an unexpected default database when multiple environments are used.
+Only one feature may affect existing projects. The default database must be loaded and instantiated in the Database class before calling the Database_Query execute() method. See Database::default_instance(). This prevents Kohana from instantiating the default database using the default config group implicitly. This is to avoid potentially using an unexpected default database when multiple environments are used.
 
 Usage
 =====

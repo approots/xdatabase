@@ -12,6 +12,13 @@
  */
 class Query extends Kohana_DB {
 	
+	/**
+	 * Alias to DB:query($any_type, $sql). The Database type is not necessary
+	 * and ignored in this extended database module.
+	 * 
+	 * @param string $sql
+	 * @return object Database_Query 
+	 */
 	public static function sql($sql)
 	{	
 		return new Database_Query(NULL, $sql);

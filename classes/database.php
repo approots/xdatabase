@@ -19,7 +19,7 @@ abstract class Database extends Kohana_Database {
 	 * (in the bootstrap).
 	 * 
 	 * @param mixed $default config group string, config array, or null if not setting
-	 * @return 
+	 * @return object default database instance
 	 */
 	public static function default_instance($default)
 	{

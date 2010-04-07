@@ -24,10 +24,10 @@ class Database_MySQL extends Kohana_Database_MySQL {
 	 * Also, for insert queries on tables without an autoincrement id, there is no insert id to
 	 * return.
 	 * 
-	 * @param object $type ignored
-	 * @param object $sql
-	 * @param object $as_object
-	 * @return 
+	 * @param string $type ignored
+	 * @param string $sql
+	 * @param boolean $as_object
+	 * @return object mysql result
 	 */
 	public function query($type, $sql, $as_object)
 	{

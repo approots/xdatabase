@@ -74,7 +74,7 @@ class Database_Query extends Kohana_Database_Query {
 	 * @param boolean $check [optional] Check cache and return cached result if available.
 	 * @param integer $specific_lifetime [optional] Set cache lifetime. If null, use default. If "0", delete.
 	 * @param string $type [optional] Cache type name if using cache module. If null use default.
-	 * @return 
+	 * @return object $this
 	 */
 	public function cache($check = TRUE, $specific_lifetime = NULL, $type = NULL)
 	{
@@ -166,6 +166,13 @@ class Database_Query extends Kohana_Database_Query {
 		return $result;
 	}
 	
+	/**
+	 * Wrap new caching around Database result.
+	 * 
+	 * @param object $db Database instance
+	 * @param string $sql
+	 * @return object Database_Result
+	 */
 	private function _execute_cache($db, $sql)
 	{
 		// Set the cache key based on the database instance name and SQL
