@@ -55,7 +55,7 @@ As with the existing cached() method, cache() should only be used with queries t
 
 The $check boolean param is used to check for a cache value.
 The integer $lifetime param is to set the $lifetime, or use the default if null, or delete cache if 0.
-The string $type method is to set the cache driver to something other than the default when using the cache module.
+The string $type param is to set the cache driver to something other than the default when using the cache module.
 
 Example:
 
