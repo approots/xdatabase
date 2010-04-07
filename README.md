@@ -6,13 +6,13 @@ This is a small library that extends and modifies just a few of the Database mod
 Dependencies
 ------------
 
-1. Kohana's database module. This module must be defined BEFORE the native database module in the bootstrap modules array.
+1. Kohana's database module. This extended database module must be defined BEFORE the native database module in the bootstrap modules array.
 2. Cache module (optional)
 
 Highlights
 ----------
 
-1. Doesn't use the query type (Database::SELECT, Database::UPDATE, etc.) because it is unnecessary and potentially conflicting. Query results are returned just as expected based on the result type, not the query type. 
+1. Doesn't use the query type (Database::SELECT, Database::UPDATE, etc.) because it is unnecessary and potentially conflicting. Query results are returned just as expected based on the result type, not the Kohana Database query type. 
 2. Uses the cache module to replace Kohana's internal cache if available and offers more flexible resultset caching. 
 3. Plug and play into existing projects.
 
@@ -20,15 +20,15 @@ Optional Features
 -----------------
 
 1. A new class class named Query extends DB and can be used as a functionally identical replacement. The new name better represents the purpose of the class. Also, DB is semantically identical to Database.
-2. Query "type" is not necessary, and even if used it is ignored. Both driver classes (mysql and pdo) detect which of the 3 types of Kohana database results to return automatically (a resultset, an array containing insert id and rows affected, or an integer rows affected). For example, Database::SELECT, Database::INSERT, etc. are no longer used.
+2. Query "type" is not necessary, and even if used it is ignored. Both driver classes (mysql and pdo) detect which of the 3 types of Kohana database results to return automatically (a resultset, an array containing insert id and rows affected, or an integer rows affected). So Database::SELECT, Database::INSERT, etc. are no longer used.
 3. The Query class has one new method called sql() which accepts one sql string parameter. Query::sql($sql) can replace DB::query(NULL, $sql), or DB::query(Database::SELECT, $sql), etc. They are functionally equivalent. 
 4. Database_Query has a new method called cache(). It is more flexible than the existing cached() method for two reasons. If available, it uses the cache module as opposed to Kohana's default internal cache. Also, in addition to the integer "lifetime" parameter, it accepts an additional boolean parameter "check". So cache can now be retrieved, set, deleted, and refreshed using different combinations of the two parameters. The cached() method is still available and, even though it now calls cache(), the results are unchanged and as expected.  
-5. The Database class has an additional helper method for setting the default database called "default_instance". When using different database environments, like development and production, it is necessary to set the default database automatically. There are several methods, but Database::default_instance($config_group_name_or_config_array) is simple.
+5. The Database class has an additional helper method for setting the default database called "default_instance". When using different database environments, like development and production, it is necessary to set the default database automatically. There are several methods, but Database::default_instance($config_group_name_or_config_array) is straightforward.
 
-Mandatory Features
-------------------
+Mandatory Feature
+-----------------
 
-Only one. The default database must be loaded and instantiated in the Database class before calling the Database_Query execute() method. See Database::default_instance(). This prevents the Kohana from instantiating the default database using the default config group implicitly. This is to avoid potentially using an unexpected default database when multiple environments are used. It's also for those who eschew magic.
+Only one. The default database must be loaded and instantiated in the Database class before calling the Database_Query execute() method. See Database::default_instance(). This prevents Kohana from instantiating the default database using the default config group implicitly. This is to avoid potentially using an unexpected default database when multiple environments are used.
 
 Usage
 =====
@@ -45,11 +45,12 @@ Query has one new method called sql(). It is functionally identical to DB::query
 - Query::sql($sql)->execute();
 - Query::sql($sql)->param(':my_param',$my_param)->execute();
 
-Database_Query cache(boolean $check, integer $lifetime) Method
---------------------------------------------------------------
+Database_Query cache(boolean $check, integer $lifetime string $type = NULL) Method
+----------------------------------------------------------------------------------
 
 The $check boolean param is used to check for a cache value.
 The integer $lifetime param is to set the $lifetime, or use the default if null, or delete cache if 0.
+The string $type method is to set the cache driver to something other than the default when using the cache module.
 
 Example:
 - Query::sql($sql)->cache()->execute();
