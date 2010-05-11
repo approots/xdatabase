@@ -117,6 +117,24 @@ class Database_Query extends Kohana_Database_Query {
 		return $this;
 	}
 
+	public function begin($db = NULL)
+	{
+		$db = $this->_database($db);
+		return $db->begin();
+	}
+	
+	public function commit($db = NULL)
+	{
+		$db = $this->_database($db);
+		return $db->commit();
+	}
+	
+	public function rollback($db = NULL)
+	{
+		$db = $this->_database($db);
+		return $db->rollback();
+	}
+	
 	/**
 	 * Execute the current query on the given database.
 	 * 
@@ -132,28 +150,12 @@ class Database_Query extends Kohana_Database_Query {
 	 */
 	public function execute($db = NULL)
 	{
-		if (! isset($db))
-		{
-			$db = 'default';
-			
-			// If default database isn't yet loaded, throw an exception. It shouldn't be loaded implicitly.
-			if ( ! isset(Database::$instances[$db]))
-			{
-				throw new Kohana_Exception('Database group name is undefined. 
-					This version of Database does not instantiate the default group implicitly.');
-			}
-		}
+		$db = $this->_database($db);
 		
-		if (! is_object($db))
-		{
-			// Get the database instance.
-			$db = Database::instance($db);
-		}
-
 		// Compile the SQL query.
 		$sql = $this->compile($db);
 
-		if (isset($this->_cache))
+		if ($db->caching() === TRUE AND isset($this->_cache))
 		{
 			$result = $this->_execute_cache($db, $sql);
 		}
@@ -164,6 +166,30 @@ class Database_Query extends Kohana_Database_Query {
 		}
 		
 		return $result;
+	}
+	
+	private function _database($db)
+	{
+		if ( ! isset($db))
+		{
+			// updated to use Database 3.0.5 Database::$name variable 
+			$db = (isset(Database::$name)) ? Database::$name : 'default';
+			
+			// If default database isn't yet loaded, throw an exception. It shouldn't be loaded implicitly.
+			if ( ! isset(Database::$instances[$db]))
+			{
+				throw new Kohana_Exception('Database group name is undefined. 
+					This version of Database does not instantiate the default group implicitly.');
+			}
+		}
+		
+		if ( ! is_object($db))
+		{
+			// Get the database instance.
+			$db = Database::instance($db);
+		}
+		
+		return $db;
 	}
 	
 	/**

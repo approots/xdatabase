@@ -103,4 +103,28 @@ class Database_PDO extends Kohana_Database_PDO {
 			}
 		}
 	}
+	
+	public function begin()
+	{
+		// Make sure the database is connected
+		$this->_connection or $this->connect();
+
+		return $this->_connection->beginTransaction();
+	}
+
+	public function commit()
+	{
+		// Make sure the database is connected
+		$this->_connection or $this->connect();
+
+		return $this->_connection->commit();
+	}
+
+	public function rollback()
+	{
+		// Make sure the database is connected
+		$this->_connection or $this->connect();
+
+		return $this->_connection->rollBack();
+	}
 } // End Database_PDO
