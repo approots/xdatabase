@@ -26,7 +26,7 @@ Optional Features
 4. Database_Query has a new method called cache(). It is more flexible than the existing cached() method for two reasons. If available, it uses the cache module as opposed to Kohana's default internal cache. Also, in addition to the integer "lifetime" parameter, it accepts an additional boolean parameter "check". So cache can now be retrieved, set, deleted, and refreshed using different combinations of the two parameters. The cached() method is still available and, even though it now calls cache(), the results are unchanged and as expected if not using the cache module.  
 5. The Database class has an additional helper method for setting the default database called "default_instance". When using different database environments, like development and production, it is beneficial to set the default database automatically. There are several ways to do so, but Database::default_instance($config_group_name_or_config_array) is clean.
 6. New: Transaction support.
-7. New: Support for the database caching config variable.
+7. New: Support for the database caching config variable. Although this variable is defined in the Kohana database config, it wasn't supported. Now, if the "caching" config variable is set to FALSE, all queries that use the Kohana cached() or xdatabase cache() methods won't use caching. This is convenient when testing or developing.
 
 Mandatory Feature
 -----------------
