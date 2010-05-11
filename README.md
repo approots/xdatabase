@@ -15,6 +15,7 @@ Highlights
 1. Doesn't use the query type (Database::SELECT, Database::UPDATE, etc.) because it is unnecessary and potentially conflicting. Query results are returned just as expected based on the result type, not the Kohana Database query type. 
 2. Uses the cache module to replace Kohana's internal cache if available and offers more flexible resultset caching. 
 3. Plug and play into existing projects.
+4. New: Transactions
 
 Optional Features
 -----------------
@@ -24,11 +25,13 @@ Optional Features
 3. The Query class has one new method called sql() which accepts one sql string parameter. Query::sql($sql) can replace DB::query(NULL, $sql), or DB::query(Database::SELECT, $sql), etc. They are functionally equivalent. 
 4. Database_Query has a new method called cache(). It is more flexible than the existing cached() method for two reasons. If available, it uses the cache module as opposed to Kohana's default internal cache. Also, in addition to the integer "lifetime" parameter, it accepts an additional boolean parameter "check". So cache can now be retrieved, set, deleted, and refreshed using different combinations of the two parameters. The cached() method is still available and, even though it now calls cache(), the results are unchanged and as expected if not using the cache module.  
 5. The Database class has an additional helper method for setting the default database called "default_instance". When using different database environments, like development and production, it is beneficial to set the default database automatically. There are several ways to do so, but Database::default_instance($config_group_name_or_config_array) is clean.
+6. New: Transaction support.
+7. New: Support for the database caching config variable.
 
 Mandatory Feature
 -----------------
 
-Only one feature may affect existing projects. The default database must be loaded and instantiated in the Database class before calling the Database_Query execute() method without a database parameter defined. See Database::default_instance(). This prevents Kohana from instantiating the default database using the default config group implicitly. This is to avoid potentially using an unexpected default database when multiple environments are used.
+Only one feature may affect existing projects. The default database must be loaded and instantiated in the Database class before calling the Database_Query execute() method without a database parameter defined. See Database::default_instance(). Update: Kohana will implement a Database::$name variable that should be used to set the default instead of default_instance(). This prevents Kohana from instantiating the default database using the default config group implicitly. This is to avoid potentially using an unexpected default database when multiple environments are used.
 
 
 Usage
@@ -109,3 +112,48 @@ Some alternatives to this method:
 1. Put logic in config files to dynamically set the "default" group to some other group.
 2. In bootstrap: Kohana::config('database')->default = Kohana::config('database')->$group_name;. Note that all config parameters must be defined since Kohana will not be able to merge config files.
 3. In bootstrap: Database::instance('default', Kohana::config('database')->$group_name);. This works but isn't very clear.
+
+Transactions
+------------
+
+1) Example using the xdatabase Query class
+    try
+    {
+      Query::begin();
+      Query::sql($sql)->execute();
+      // ... more code/queries
+      Query::commit();
+    }
+    catch (Exception $e)
+    {
+      Query::rollback();
+    }
+
+2) Example using existing Kohana style
+
+	$db = Database::instance();
+	$db->begin();
+	DB::query(Database::INSERT, $sql)->execute($db);
+	// ... more code/queries ...
+	if ($conditions_met)
+	{
+	  $db->commit();
+	}
+	else
+	{
+	  $db->rollback();
+	}
+
+3) Example using the Query class without the default database
+	$db = Database::instance('alternate');
+	Query::begin($db);
+	Query::sql($sql)->execute($db);
+	// ... more code/queries ...
+	if ($conditions_met)
+	{
+	  Query::commit($db);
+	}
+	else
+	{
+	  Query::rollback($db);
+	}

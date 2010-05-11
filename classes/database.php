@@ -3,6 +3,8 @@
  * Database connection wrapper. Extends Kohana_Database.
  * 
  * - Added method default_instance($default)
+ * - Added caching() method to give Database_Query access to the private "caching" 
+ * config variable
  *
  * @package Database
  * @author Rick Jolly <rickjolly@hotmail.com>
