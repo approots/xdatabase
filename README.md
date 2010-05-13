@@ -1,4 +1,4 @@
-Extended Kohana 3 Database Library (0.1)
+Extended Kohana 3 Database Library (0.2)
 =======================================
 
 This is a small library that extends and modifies just a few of the Database module's classes/methods. Since all features (but one) are optional, the module can be dropped into existing projects that use Kohana's database module.
@@ -51,7 +51,7 @@ Query has one new method called sql(). It is functionally identical to DB::query
 - Query::sql($sql)->execute();
 - Query::sql($sql)->param(':my_param',$my_param)->execute();
 
-Database_Query cache(boolean $check, integer $lifetime string $type = NULL) Method
+Database_Query cache(boolean $check = TRUE, integer $lifetime = NULL, string $type = NULL) Method
 ----------------------------------------------------------------------------------
 
 As with the existing cached() method, cache() should only be used with queries that return a resultset (select queries).
