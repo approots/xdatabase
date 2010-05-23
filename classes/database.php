@@ -15,9 +15,9 @@ abstract class Database extends Kohana_Database {
 	
 	/**
 	 * UPDATE: Kohana database 3.0.5 makes this method obsolete since it
-	 * added a static $name variable for the default config group. 
+	 * added a static $default variable for the default config group. 
 	 * So the default config group can be set in the bootstrap
-	 * as in this example: Database::$name = 'production';
+	 * as in this example: Database::$default = 'production';
 	 * 
 	 * Get/set the "default" database instance. The same thing could be done
 	 * using Database::instance(). This method is just for convenience and clarity.

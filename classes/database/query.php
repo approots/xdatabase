@@ -172,8 +172,8 @@ class Database_Query extends Kohana_Database_Query {
 	{
 		if ( ! isset($db))
 		{
-			// updated to use Database 3.0.5 Database::$name variable 
-			$db = (isset(Database::$name)) ? Database::$name : 'default';
+			// updated to use Database 3.0.5 Database::$default variable 
+			$db = (isset(Database::$default)) ? Database::$default : 'default';
 			
 			// If default database isn't yet loaded, throw an exception. It shouldn't be loaded implicitly.
 			if ( ! isset(Database::$instances[$db]))
