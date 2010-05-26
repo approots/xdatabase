@@ -27,11 +27,6 @@ Optional Features
 5. Transaction support.
 6. Support for the database caching config variable. Although this variable is defined in the Kohana database config, it wasn't supported. Now, if the "caching" config variable is set to FALSE, all queries that use the Kohana cached() or xdatabase cache() methods won't use caching. This is convenient when testing or developing.
 
-Mandatory Feature
------------------
-
-Only one feature may affect existing projects. The default database must be loaded and instantiated in the Database class before calling the Database_Query execute() method without a database parameter defined. See Database::default_instance(). Update: Kohana will implement a Database::$default variable that should be used to set the default instead of default_instance(). This prevents Kohana from instantiating the default database using the default config group implicitly. This is to avoid potentially using an unexpected default database when multiple environments are used.
-
 Changelog
 =========
 
