@@ -1,4 +1,4 @@
-Extended Kohana 3 Database Library (0.2)
+Extended Kohana 3 Database Library (0.3)
 =======================================
 
 This is a small library that extends and modifies just a few of the Database module's classes/methods. Since all features (but one) are optional, the module can be dropped into existing projects that use Kohana's database module.
@@ -15,24 +15,33 @@ Highlights
 1. Doesn't use the query type (Database::SELECT, Database::UPDATE, etc.) because it is unnecessary and potentially conflicting. Query results are returned just as expected based on the result type, not the Kohana Database query type. 
 2. Uses the cache module to replace Kohana's internal cache if available and offers more flexible resultset caching. 
 3. Plug and play into existing projects.
-4. New: Transactions
+4. Transactions
 
 Optional Features
 -----------------
 
-1. A new class class named Query extends DB and can be used as a functionally identical replacement. The new name better represents the purpose of the class. Also, DB is semantically identical to Database.
+1. A new class named Query extends DB and can be used as a functionally identical replacement. The new name better represents the purpose of the class. Also, DB is semantically identical to Database.
 2. Query "type" is not necessary, and even if used it is ignored. Both driver classes (mysql and pdo) detect which of the 3 types of Kohana database results to return automatically (a resultset, an array containing insert id and rows affected, or an integer rows affected). So Database::SELECT, Database::INSERT, etc. are no longer used.
 3. The Query class has one new method called sql() which accepts one sql string parameter. Query::sql($sql) can replace DB::query(NULL, $sql), or DB::query(Database::SELECT, $sql), etc. They are functionally equivalent. 
 4. Database_Query has a new method called cache(). It is more flexible than the existing cached() method for two reasons. If available, it uses the cache module as opposed to Kohana's default internal cache. Also, in addition to the integer "lifetime" parameter, it accepts an additional boolean parameter "check". So cache can now be retrieved, set, deleted, and refreshed using different combinations of the two parameters. The cached() method is still available and, even though it now calls cache(), the results are unchanged and as expected if not using the cache module.  
-5. The Database class has an additional helper method for setting the default database called "default_instance". When using different database environments, like development and production, it is beneficial to set the default database automatically. There are several ways to do so, but Database::default_instance($config_group_name_or_config_array) is clean. Update: Kohana will implement a Database::$default which should be used instead.
-6. New: Transaction support.
-7. New: Support for the database caching config variable. Although this variable is defined in the Kohana database config, it wasn't supported. Now, if the "caching" config variable is set to FALSE, all queries that use the Kohana cached() or xdatabase cache() methods won't use caching. This is convenient when testing or developing.
+5. Transaction support.
+6. Support for the database caching config variable. Although this variable is defined in the Kohana database config, it wasn't supported. Now, if the "caching" config variable is set to FALSE, all queries that use the Kohana cached() or xdatabase cache() methods won't use caching. This is convenient when testing or developing.
 
 Mandatory Feature
 -----------------
 
 Only one feature may affect existing projects. The default database must be loaded and instantiated in the Database class before calling the Database_Query execute() method without a database parameter defined. See Database::default_instance(). Update: Kohana will implement a Database::$default variable that should be used to set the default instead of default_instance(). This prevents Kohana from instantiating the default database using the default config group implicitly. This is to avoid potentially using an unexpected default database when multiple environments are used.
 
+Changelog
+=========
+
+2010-05-26 
+
+- Removed the Database::default_instance method. Kohana 3.0.5 introduced the Database::$default variable which should be used instead. In the bootstrap use: 
+
+    Database::$default = 'config_group_name';
+    // or
+    Database::$default = Kohana::$environment;
 
 Usage
 =====

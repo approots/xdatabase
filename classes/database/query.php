@@ -172,15 +172,14 @@ class Database_Query extends Kohana_Database_Query {
 	{
 		if ( ! isset($db))
 		{
-			// updated to use Database 3.0.5 Database::$default variable 
-			$db = (isset(Database::$default)) ? Database::$default : 'default';
-			
-			// If default database isn't yet loaded, throw an exception. It shouldn't be loaded implicitly.
-			if ( ! isset(Database::$instances[$db]))
-			{
-				throw new Kohana_Exception('Database group name is undefined. 
-					This version of Database does not instantiate the default group implicitly.');
-			}
+			// Updated to use Database 3.0.5 Database::$default variable.
+			//
+			// Update: An exception is no longer thrown when the default database has
+			// yet to be instantiated. Since it is now straightforward to set the
+			// default database config group in the bootstrap (using Database::$default).
+			// I'm assuming it has been done so there won't be problems when switching
+			// environments (for example, going from development to production).
+			$db = Database::$default;
 		}
 		
 		if ( ! is_object($db))
