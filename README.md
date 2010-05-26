@@ -100,23 +100,6 @@ Specific usage if no cache module. Note that lifetime is meaningless when settin
 - cache(false, 60); Refresh cache. Same as above cache(false) since lifetime ignored when setting.
 - cache(false, 0); Delete cache. Same as cache(true, 0);
 
-Database::default_instance()
-----------------------------
-
-Use this to set the default database in the bootstrap:
-
-- Database::default_instance($config_group_name_or_config_array);
-
-For example if you have Kohana::environment set to "development" and your database config group has the same name:
-
-- Database::default_instance(Kohana::$environment);
-
-Some alternatives to this method:
-
-1. Put logic in config files to dynamically set the "default" group to some other group.
-2. In bootstrap: Kohana::config('database')->default = Kohana::config('database')->$group_name;. Note that all config parameters must be defined since Kohana will not be able to merge config files.
-3. In bootstrap: Database::instance('default', Kohana::config('database')->$group_name);. This works but isn't very clear.
-
 Transactions
 ------------
 
