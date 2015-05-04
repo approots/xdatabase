@@ -104,6 +104,7 @@ Transactions
 ------------
 
 1) Example using the xdatabase Query class
+
     try
     {
       Query::begin();
@@ -132,7 +133,8 @@ Transactions
 	}
 
 3) Example using the Query class without the default database
-	$db = Database::instance('alternate');
+
+    $db = Database::instance('alternate');
 	Query::begin($db);
 	Query::sql($sql)->execute($db);
 	// ... more code/queries ...
